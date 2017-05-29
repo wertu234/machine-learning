@@ -1,7 +1,7 @@
 # machine-learning
 My completed (and in progress) projects for Udacity's Machine Learning curriculum.
 
-##Status of projects
+## Status of projects
 1. Naive Bayes Tutorial: Completed
 2. Titanic Survival Exploration: Submitted - Awaiting Feedback
 3. Predicting Boston Housing Prices: Pending
