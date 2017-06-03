@@ -3,8 +3,8 @@ My completed (and in progress) projects for Udacity's Machine Learning curriculu
 
 ## Status of projects
 1. Naive Bayes Tutorial: Completed
-2. Titanic Survival Exploration: Submitted - Awaiting Feedback
-3. Predicting Boston Housing Prices: Pending
+2. Titanic Survival Exploration: Completed
+3. Predicting Boston Housing Prices: Submitted - Awaiting Feedback
 4. Build a Student Intervention System: Pending
 5. Finding Donors For Charity: Pending
 6. Creating Customer Segments: Pending
