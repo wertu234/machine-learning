@@ -11,6 +11,20 @@
 # 
 # >**Note:** Please specify WHICH VERSION OF PYTHON you are using when submitting this notebook. Code and Markdown cells can be executed using the **Shift + Enter** keyboard shortcut. In addition, Markdown cells can be edited by typically double-clicking the cell to enter edit mode.
 
+# In[1]:
+
+##Software versions
+import sys
+import numpy
+import pandas
+import sklearn
+
+print(sys.version)
+print("Numpy version: %s" % numpy.__version__)
+print("Pandas version: %s" % pandas.__version__)
+print("Sklearn version: %s" % sklearn.__version__)
+
+
 # ## Getting Started
 # 
 # In this project, you will employ several supervised algorithms of your choice to accurately model individuals' income using data collected from the 1994 U.S. Census. You will then choose the best candidate algorithm from preliminary results and further optimize this algorithm to best model the data. Your goal with this implementation is to construct a model that accurately predicts whether an individual makes more than $50,000. This sort of task can arise in a non-profit setting, where organizations survive on donations.  Understanding an individual's income can help a non-profit better understand how large of a donation to request, or whether or not they should reach out to begin with.  While it can be difficult to determine an individual's general income bracket directly from public sources, we can (as we will see) infer this value from other publically available features. 
@@ -21,7 +35,7 @@
 # ## Exploring the Data
 # Run the code cell below to load necessary Python libraries and load the census data. Note that the last column from this dataset, `'income'`, will be our target label (whether an individual makes more than, or at most, $50,000 annually). All other columns are features about each individual in the census database.
 
-# In[12]:
+# In[2]:
 
 # Import libraries necessary for this project
 import numpy as np
@@ -51,7 +65,7 @@ display(data.head(n=1))
 # 
 # **Hint:** You may need to look at the table above to understand how the `'income'` entries are formatted. 
 
-# In[13]:
+# In[3]:
 
 # TODO: Total number of records
 n_records = data.shape[0]
@@ -69,7 +83,7 @@ greater_percent = n_greater_50k / n_records
 print("Total number of records: {}".format(n_records))
 print("Individuals making more than $50,000: {}".format(n_greater_50k))
 print("Individuals making at most $50,000: {}".format(n_at_most_50k))
-print("Percentage of individuals making more than $50,000: {:.2f}%".format(greater_percent))
+print("Percentage of individuals making more than $50,000: {:.2%}".format(greater_percent))
 
 
 # ----
@@ -81,7 +95,7 @@ print("Percentage of individuals making more than $50,000: {:.2f}%".format(great
 # 
 # Run the code cell below to plot a histogram of these two features. Note the range of the values present and how they are distributed.
 
-# In[14]:
+# In[4]:
 
 # Split the data into features and target label
 income_raw = data['income']
@@ -95,7 +109,7 @@ vs.distribution(data)
 # 
 # Run the code cell below to perform a transformation on the data and visualize the results. Again, note the range of values and how they are distributed. 
 
-# In[15]:
+# In[5]:
 
 # Log-transform the skewed features
 skewed = ['capital-gain', 'capital-loss']
@@ -110,7 +124,7 @@ vs.distribution(features_raw, transformed = True)
 # 
 # Run the code cell below to normalize each numerical feature. We will use [`sklearn.preprocessing.MinMaxScaler`](http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MinMaxScaler.html) for this.
 
-# In[16]:
+# In[6]:
 
 # Import sklearn.preprocessing.StandardScaler
 from sklearn.preprocessing import MinMaxScaler
@@ -139,7 +153,7 @@ display(features_raw.head(n = 1))
 #  - Convert the target label `'income_raw'` to numerical entries.
 #    - Set records with "<=50K" to `0` and records with ">50K" to `1`.
 
-# In[18]:
+# In[7]:
 
 # TODO: One-hot encode the 'features_raw' data using pandas.get_dummies()
 features = pd.get_dummies(features_raw)
@@ -160,7 +174,7 @@ print(encoded)
 # 
 # Run the code cell below to perform this split.
 
-# In[19]:
+# In[8]:
 
 # Import train_test_split
 from sklearn.cross_validation import train_test_split
@@ -190,7 +204,7 @@ print("Testing set has {} samples.".format(X_test.shape[0]))
 # *If we chose a model that always predicted an individual made more than \$50,000, what would that model's accuracy and F-score be on this dataset?*  
 # **Note:** You must use the code cell below and assign your results to `'accuracy'` and `'fscore'` to be used later.
 
-# In[20]:
+# In[9]:
 
 # TODO: Calculate accuracy
 accuracy = greater_percent
@@ -221,59 +235,63 @@ print("Naive Predictor: [Accuracy score: {:.4f}, F-score: {:.4f}]".format(accura
 
 # **Answer: **
 # __Logistic Regression__
+# 
 # _Real word application_:
-# Google parking availability
+# One example of a real world application where this model can be applied is predicting the difficulty of parking at a given place and time. Google implemented this feature in their Google Maps products using logistic regression in February 2017.
 # https://research.googleblog.com/2017/02/using-machine-learning-to-predict.html
 # 
 # 
 # _Strengths of the model_:
-# -  parametirc
-# -  simple
-# -  fast
-# -  scales well
-# -   online learning...
+# Logistic regression has several strengths. The first of these is that it is highly parametric. That means that it very easy to interpret the resulting model, in particular its parameters. This is very important when one has explain the model and justify the decisions one based on the model. This need can quite easily arise in a business setting, and the ability to explain a model to upper management, customers or regulators should not be underestimated..
 # 
-# _Weakness of model_:
+# The second strength of logistic regression is that it outputs unbiased probabilities. Several models such as Support Vector Machines or K Nearest Neighbours do not output probabilities without signifcant modifications. While other models such as Naive Bayes or decision trees also output probabilities, they are not unbiased and require adjustments before they can  The probiablites form the logistic regrsison algotrirhm can be used.
 # 
-# Cannot deal wotjh non linear relationshjips betweent he class and features. Have to manually add features
+# A third strength of logistic regression is that it efficient to train the model and to make predictions using the resulting model. This is important when one has a large quantity of data and perhaps not much time. In particular, when one has a great deal of features compared to the number of training examples logistic regression can perform well.Logistic regression is a good baseline.
 # 
-# _WHy good candiate?_:
+# _Weakness of the model_:
+# The biggest drawback of logistic regression stems from its simplcicity. It cannot deal automatically with non-linear relationships between the class and the explanatory variables. While it is possible to manually add non-linear features, this process can be time consuming. 
 # 
-# because stuff. Only 14 variables. Logistic regression is good baseline... Easy
+# _Why is it a good candiate?_:
+# Logistic regression is a good candidate for this problem, but not because of preexisting information that I have regarding the data set. Since there are only 13 (103 after one hot encoding) features, logistic regression is not needed to prevent over fitting. In fact, with so few predictor variables it is expected that logistic regression will underperform compared to other models that can learn more complicated, non-linear, relatiionships. In addition, with less than 50 000 records, the data set is quite small. So logistic regression is not needed for performance reasons. However, I think that logistic regression is an appropiate model for this problem because it is good to inlcude it as a baseline. If other, more complicated models, do not outperform it by a significant margin, a logistic regression model should be used since it's improved interpretability could represent a large business value to the charity.
 # 
-# __SVM__
+# 
+# __Nearest neighbours__
+# 
 # _Real word application_:
-# Identifying Narcotics with a Pocket-Size Near-Infrared Spectrometer
-# http://www.azooptics.com/Article.aspx?ArticleID=1221#8
-# 
-# _Strengths of the model_:
-# Can capture non lineraties. Can tweak kernel used to capture all sorts of different non lineraties..
-# Maximizes margin....
-# 
-# _Weakness of model_:
-# Can be slow to train with lots of data, depending on kernel used. If using linear kernel, then not slow. But then don't capute nonlineaites.
-# 
-# _WHy good candiate?_:
-# Good for classification.
-# 
-# __Boosted trees__
-# _Real word application_:
-# Mortgagte stuff...
-# http://www.themreport.com/daily-dose/05-29-2017/enhanced-vision
-# 
-# _Strengths of the model_:
-# _Weakness of model_:
-# _WHy good candiate?_:
-# 
-# __Neares neighbourrs__
-# _Real word application_:
+# When browsing or otherwise accessing a piece of content on the internet, the nearest neighbours algorithm can be used to serve up an ad that is similar to the content that is being accessed. Facebook would like to use such a method to serve ads related to a video that a user is watching. The ability to engage in so behavior is very important, important enough that Facebook has developed a more efficient implementation of the algorithm. 
 # 
 # https://techcrunch.com/2017/03/29/similarity-search/
-# facebook ads for video
 # 
 # _Strengths of the model_:
+# An important strength of the nearest neighbour algorithm is that it is fully non-parametric. Given enough training points, it can learn any relationship. Another strenght is that one inspect the nearest neighours for each training point. While not as easy to interpret as logistic regression, this can help explain and justify the results of the model to others.
+# 
 # _Weakness of model_:
-# _WHy good candiate?_:
+# The biggest weakness of the nearest neighbours algorithm is that it does not work well when the data set has many features. This is known as the curse of dimensionality. It means that as the number of features increases, the required number of training examples increases exponentially. As as a result, there are many data sets to which the k nearest neighbours algorithm cannot be applied  without reducing the number of dimensions. 
+# 
+# In addition to not scaling well with the number of feature dimensions, the k nearest neighbours algorithm can also be slow when making predictions. This is because the k nearest neighbours algorithm does not do any "pretraining". It does not learn relationships between features and labels that are used at prediction time. At prediction time, the k-nearest algorithm looks anew at all the training points in order to produce a prediction for a testing sample.  
+# 
+# _Why is it a good candiate?_:
+# K nearest neighbours is a good candidate for this problem since the with less than 50 000 records, the algorithm will not be too slow when making predictions. In addition, the number of features is not too high relative to the number of training examples, so we should not be encountering the curse of dimensionality. Finally, given that I have selected to test logistic regression, a strongly parametric model, it will interesting to compare and contrast its results with k nearest neighbours, a non-parametric model.
+# 
+# __Gradient boosted trees__
+# 
+# _Real word application_:
+# One example of a real world application where boosted trees can be applied is predicting whether a deliquent mortgage loan will re-perform after receiving a modification. This would be a very important application because the ability to sucessfuly predict whether a loan will re-perform could lead a many opportunities to make a profit by buying the deliquent mortgages at a low price and then subsequently selling them for a higher price when they re-perform.
+# 
+# I obtained the idea for this application from the following report:
+# http://us.milliman.com/uploadedFiles/insight/2017/enhanced-vision.pdf
+# 
+# _Strengths of the model_:
+# The gradient boosted trees algorithm has many strengths. While the algorithm is not as parametric as logistic regresion, it can still produce indicators of the relative importance of each feature. This can be very helpful when quality assuring the model, although the feature importances can be hard to interpret. Unlike logistic regression, boosted trees can learn non-linear relationships. In addition, because the boosted trees ensembles weak learners, it is not likely to overfit to the data. This means that in many situations gradient boosted trees provide very good results.
+# 
+# Finally, another strength of boosted trees is that the model can output probabilities without additional processing. These probabilities can be used in a myriad of ways. For example, earlier I gave an example of using boosted trees to predict whether a mortgage loan will re-perform. In this situation, one could start to test the real world profitability of the predictions by only buying and modifiying mortgages that are predicted to re-perform with a high proability. If the high probability loans prove profitable, one can commence to purchase loans with a lower probability (but greater than 50%) of re-performance. Finally, the boosted trees alogrithm is usually quite efficient to train and predict. This is very helpful when quickly diving into a problem.
+# 
+# 
+# _Weakness of the model_:
+# Compared to simpler, more parametric models, such as logistic regression, boosted trees are a bit of a "black box". It is not easy to inspect or explain the predictions output by the boosted trees algorithm. This can be a significant drawback if there is need to justify why certain actions were taken based on the model. In addition, boosted trees also contain many more hyper-parameters compared to a simpler method such as logistic regression. These hyper-parameters might need to be manually tuned in order to achieve optimal results. However one can expect that boosted trees will outperform logistic regression with default hyper-parameter values, especially considering the limited number of features in this dataset.
+# 
+# _Why is it a good candiate?_:
+# Given that we have only 13 features, the boosted trees method is a good candidate since better performance will be probably be obtained by using a model that can learn non-linear relationships. Especially considering that we have 40k+ records, there is a low risk of overfitting. Gradient boosted trees are a good compromise between a strongly parametric model such as logistic regression and a fully non-parametric model such a k nearest neighbours.
 
 # ### Implementation - Creating a Training and Predicting Pipeline
 # To properly evaluate the performance of each model you've chosen, it's important that you create a training and predicting pipeline that allows you to quickly and effectively train models using various sizes of training data and perform predictions on the testing data. Your implementation here will be used in the following section.
@@ -286,7 +304,7 @@ print("Naive Predictor: [Accuracy score: {:.4f}, F-score: {:.4f}]".format(accura
 #  - Calculate the F-score for both the training subset and testing set.
 #    - Make sure that you set the `beta` parameter!
 
-# In[21]:
+# In[10]:
 
 # TODO: Import two metrics from sklearn - fbeta_score and accuracy_score
 
@@ -317,7 +335,7 @@ def train_predict(learner, sample_size, X_train, y_train, X_test, y_test):
     # TODO: Get the predictions on the test set,
     #       then get predictions on the first 300 training samples
     start = time() # Get start time
-    predictions_test = learner.predict(X_test.iloc[:300,:])
+    predictions_test = learner.predict(X_test)
     predictions_train = learner.predict(X_train.iloc[:300,:])
     end = time() # Get end time
     
@@ -354,17 +372,17 @@ def train_predict(learner, sample_size, X_train, y_train, X_test, y_test):
 # 
 # **Note:** Depending on which algorithms you chose, the following implementation may take some time to run!
 
-# In[22]:
+# In[11]:
 
 # TODO: Import the three supervised learning models from sklearn
 
 
 # TODO: Initialize the three models
-from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import GradientBoostingClassifier
 # TODO: Initialize the three models
-clf_A = SVC(random_state = 123)
+clf_A = KNeighborsClassifier()
 clf_B = LogisticRegression(random_state = 123)
 clf_C = GradientBoostingClassifier(random_state = 123)
 
@@ -386,40 +404,6 @@ for clf in [clf_A, clf_B, clf_C]:
 vs.evaluate(results, accuracy, fscore)
 
 
-# In[24]:
-
-# TODO: Import the three supervised learning models from sklearn
-
-
-# TODO: Initialize the three models
-from sklearn.svm import SVC
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.neighbors import KNeighborsClassifier
-# TODO: Initialize the three models
-clfs = [SVC(random_state = 123), LogisticRegression(random_state = 123), GradientBoostingClassifier(random_state = 123), GradientBoostingClassifier(random_state = 123),       RandomForestClassifier(random_state = 123), KNeighborsClassifier()]
-
-# TODO: Calculate the number of samples for 1%, 10%, and 100% of the training data
-samples_1 = int(0.01 * n_records)
-samples_10 = int(0.1 * n_records)
-samples_100 = n_records
-
-# Collect results on the learners
-results = {}
-for clf in clfs:
-    clf_name = clf.__class__.__name__
-    results[clf_name] = train_predict(clf, samples_100, X_train, y_train, X_test, y_test)
-
-# Run metrics visualization for the three supervised learning models chosen
-check = pd.DataFrame(results)
-
-
-# In[25]:
-
-print(check)
-
-
 # ----
 # ## Improving Results
 # In this final section, you will choose from the three supervised learning models the *best* model to use on the student data. You will then perform a grid search optimization for the model over the entire training set (`X_train` and `y_train`) by tuning at least one parameter to improve upon the untuned model's F-score. 
@@ -429,11 +413,16 @@ print(check)
 # **Hint:** Your answer should include discussion of the metrics, prediction/training time, and the algorithm's suitability for the data.
 
 # **Answer: **
+# I believe that gradient boosted trees classifier is the most appropiate model for the task of identifying individuals that make more than $50,000. This is because the above results show that the boosted trees classifier performs best, as measured by both the accuracy and the F-score, of the three tested models. 
+# 
+# It is true that the boosted trees classifier has the longest training time, at about 10 seconds. However, 10 seconds is not very long. If we get more data, we could re-train the model and even then it should not take very long. Since a model is only trained once, the prediction time is more important. Here, the boosted trees perform very well. In fact, given the long prediction time of the k nearest neighbours algorithm, the prediction time of the boosted trees classifier does not even register.
+# 
 
 # ### Question 4 - Describing the Model in Layman's Terms
 # *In one to two paragraphs, explain to *CharityML*, in layman's terms, how the final model chosen is supposed to work. Be sure that you are describing the major qualities of the model, such as how the model is trained and how the model makes a prediction. Avoid using advanced mathematical or technical jargon, such as describing equations or discussing the algorithm implementation.*
 
 # **Answer: ** 
+# The gradient boosted trees classifier is an ensemble method. An ensemble method combines several algorithms together to receive better predictive power. Boosting means that the ensemble is created by combining weak learners. In this case, the weak learners are decision trees. Decision trees are an efficient method of modelling non-linear relationships. However decision trees are prone to overfitting to the training data and performing poorly on the test data as a result. Boosting avoids this problem by creating a series of decision trees, all of which are constrained to be "weak". This means that they do not overfit the data. This is typically accomplished by constraining the depth of each tree. However this means that each individual tree is not a very good estimator. This is why the gradient boosted alogorithm builds trees sequentially, where later trees try to improve the results of earlier trees. In fact, in the boosted trees classifier, later trees are not trying to predict the labels themselves, but rather the error or "pseudo-residuals" of the model created by the earlier trees. Prediction is accomplished by outputting the results of all of these weak decision trees and then summing together their outputs. This produces a probability of whether a particular record belongs to the target class.
 
 # ### Implementation: Model Tuning
 # Fine tune the chosen model. Use grid search (`GridSearchCV`) with at least one important parameter tuned with at least 3 different values. You will need to use the entire training set for this. In the code cell below, you will need to implement the following:
@@ -449,24 +438,26 @@ print(check)
 # 
 # **Note:** Depending on the algorithm chosen and the parameter list, the following implementation may take some time to run!
 
-# In[ ]:
+# In[12]:
 
 # TODO: Import 'GridSearchCV', 'make_scorer', and any other necessary libraries
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import make_scorer
 
 # TODO: Initialize the classifier
-clf = None
+clf = GradientBoostingClassifier(random_state = 123)
 
 # TODO: Create the parameters list you wish to tune
-parameters = None
+parameters = {'learning_rate' : [0.01, 0.05, 0.1], 'n_estimators' : [100, 500, 1000], 'max_depth' : [3, 5, 8]}
 
 # TODO: Make an fbeta_score scoring object
-scorer = None
+scorer = make_scorer(fbeta_score, beta = 0.5)
 
 # TODO: Perform grid search on the classifier using 'scorer' as the scoring method
-grid_obj = None
+grid_obj = GridSearchCV(clf, parameters, scoring = scorer, n_jobs = 6)
 
 # TODO: Fit the grid search object to the training data and find the optimal parameters
-grid_fit = None
+grid_fit = grid_obj.fit(X_train, y_train)
 
 # Get the estimator
 best_clf = grid_fit.best_estimator_
@@ -476,12 +467,12 @@ predictions = (clf.fit(X_train, y_train)).predict(X_test)
 best_predictions = best_clf.predict(X_test)
 
 # Report the before-and-afterscores
-print "Unoptimized model\n------"
-print "Accuracy score on testing data: {:.4f}".format(accuracy_score(y_test, predictions))
-print "F-score on testing data: {:.4f}".format(fbeta_score(y_test, predictions, beta = 0.5))
-print "\nOptimized Model\n------"
-print "Final accuracy score on the testing data: {:.4f}".format(accuracy_score(y_test, best_predictions))
-print "Final F-score on the testing data: {:.4f}".format(fbeta_score(y_test, best_predictions, beta = 0.5))
+print("Unoptimized model\n------")
+print("Accuracy score on testing data: {:.4f}".format(accuracy_score(y_test, predictions)))
+print("F-score on testing data: {:.4f}".format(fbeta_score(y_test, predictions, beta = 0.5)))
+print("\nOptimized Model\n------")
+print("Final accuracy score on the testing data: {:.4f}".format(accuracy_score(y_test, best_predictions)))
+print("Final F-score on the testing data: {:.4f}".format(fbeta_score(y_test, best_predictions, beta = 0.5)))
 
 
 # ### Question 5 - Final Model Evaluation
@@ -492,11 +483,14 @@ print "Final F-score on the testing data: {:.4f}".format(fbeta_score(y_test, bes
 # 
 # |     Metric     | Benchmark Predictor | Unoptimized Model | Optimized Model |
 # | :------------: | :-----------------: | :---------------: | :-------------: | 
-# | Accuracy Score |                     |                   |                 |
-# | F-score        |                     |                   |   EXAMPLE       |
+# | Accuracy Score | 0.2478              | 0.8630            | 0.8710          |
+# | F-score        |    0.2917           |  0.7395           |    0.7530       |
 # 
 
 # **Answer: **
+# 
+# The optimized model is better than the unoptimized model. This makes sense since the unoptimized model, with the sklearn defaults, was included in the grid search (depth of 3, 100 estimators, learning rate of 0.1). However the optimized option only results in an improvement of 0.0135 in the F-score, with a similar improvement in the accuracy score. Both the unoptimized and the optimized model perform much better than the benchmark predictor. Using either the optimized or unoptimized boosted trees classifier should result in much better business decisions for the client charity than trying to solicit from all individuals under the assumption that they all make over $50,000.
+# 
 
 # ----
 # ## Feature Importance
@@ -510,6 +504,14 @@ print "Final F-score on the testing data: {:.4f}".format(fbeta_score(y_test, bes
 # _Of these thirteen records, which five features do you believe to be most important for prediction, and in what order would you rank them and why?_
 
 # **Answer:**
+# 
+# I believe that that the following variables are the most important, in order of importance:
+# 
+# 1.  __education-num__: Education-num is the number of years of education that an individual has completed. This an important pre-requisite for many high paying jobs. Even when two people have the same job title, one can expect the person with the greater amount of education to receive a higher salary.
+# 2.  __occupation__: This variable indicates the job title of the individual. One can expect this to be an important predictor, since people with certain, more prestigous, job titles should earn more.
+# 3.  __workclass__: This variable is an indicator of whether an individual is working or not, and for what kind of organization, if working. One can expect those individiuals that are working to have a higher income on average, and for those people working for the federal government to earn more.
+# 4.  __age__: This seems to be the age of the individual, in years. This should be an important predictor since older, more experienced, inviduals should be compensated more for their experience. 
+# 5.  __hours-per-week__: This variable is the average number of hours per week than an individual has worked. It would make sense for those people who work more to earn more.
 
 # ### Implementation - Extracting Feature Importance
 # Choose a `scikit-learn` supervised learning algorithm that has a `feature_importance_` attribute availble for it. This attribute is a function that ranks the importance of each feature when making predictions based on the chosen algorithm.
@@ -519,15 +521,15 @@ print "Final F-score on the testing data: {:.4f}".format(fbeta_score(y_test, bes
 #  - Train the supervised model on the entire training set.
 #  - Extract the feature importances using `'.feature_importances_'`.
 
-# In[ ]:
+# In[13]:
 
 # TODO: Import a supervised learning model that has 'feature_importances_'
 
 # TODO: Train the supervised model on the training set 
-model = None
+model = GradientBoostingClassifier(random_state = 123, learning_rate = 0.05, n_estimators = 1000, max_depth = 3).fit(X_train, y_train)
 
 # TODO: Extract the feature importances
-importances = None
+importances = model.feature_importances_
 
 # Plot
 vs.feature_plot(importances, X_train, y_train)
@@ -539,11 +541,18 @@ vs.feature_plot(importances, X_train, y_train)
 # _How do these five features compare to the five features you discussed in **Question 6**? If you were close to the same answer, how does this visualization confirm your thoughts? If you were not close, why do you think these features are more relevant?_
 
 # **Answer:**
+# 
+# Three of the features that I choose appear in the top 5. Age appears before hours-per-week, as I predicted. However of the five most predictive features, eductation-num is the least predictive. At first I was surprised, but then I realized two things. 
+# 
+# 
+# First, there is another variable, "education_level", which seems to be measuring the same thing as education-num, but it is a categorial variable rather than a numeric variable. Since these two variables are highly correlated, it makes sense that neither one would appear to be particularly strong predictor on its own.
+# 
+# Secondly, I realized that Question 6 was ill posed. Question 6 asked me to select and explain what I thought would be the five most important predictors, out of 13 predictor variables. However, as one can clearly see from the "Implementation: Data Preprocessing" section, there are in fact 103 features after one-hot-encoding. This is because each categorial feature was split into several numeric variables using the pandas.get_dummies() function. Since every categorical variable has now been split into several numeric child variables, it is unlikely for one of these child variable to appear as on the top 5 predictors. In fact, it was impossible for the occupation and the work_class variables to appear in the above chart, since they do not exist in X_train. Only their children, variables with different names, exist.
 
 # ### Feature Selection
 # How does a model perform if we only use a subset of all the available features in the data? With less features required to train, the expectation is that training and prediction time is much lower — at the cost of performance metrics. From the visualization above, we see that the top five most important features contribute more than half of the importance of **all** features present in the data. This hints that we can attempt to *reduce the feature space* and simplify the information required for the model to learn. The code cell below will use the same optimized model you found earlier, and train it on the same training set *with only the top five important features*. 
 
-# In[ ]:
+# In[14]:
 
 # Import functionality for cloning a model
 from sklearn.base import clone
@@ -559,12 +568,12 @@ clf = (clone(best_clf)).fit(X_train_reduced, y_train)
 reduced_predictions = clf.predict(X_test_reduced)
 
 # Report scores from the final model using both versions of data
-print "Final Model trained on full data\n------"
-print "Accuracy on testing data: {:.4f}".format(accuracy_score(y_test, best_predictions))
-print "F-score on testing data: {:.4f}".format(fbeta_score(y_test, best_predictions, beta = 0.5))
-print "\nFinal Model trained on reduced data\n------"
-print "Accuracy on testing data: {:.4f}".format(accuracy_score(y_test, reduced_predictions))
-print "F-score on testing data: {:.4f}".format(fbeta_score(y_test, reduced_predictions, beta = 0.5))
+print("Final Model trained on full data\n------")
+print("Accuracy on testing data: {:.4f}".format(accuracy_score(y_test, best_predictions)))
+print("F-score on testing data: {:.4f}".format(fbeta_score(y_test, best_predictions, beta = 0.5)))
+print("\nFinal Model trained on reduced data\n------")
+print("Accuracy on testing data: {:.4f}".format(accuracy_score(y_test, reduced_predictions)))
+print("F-score on testing data: {:.4f}".format(fbeta_score(y_test, reduced_predictions, beta = 0.5)))
 
 
 # ### Question 8 - Effects of Feature Selection
@@ -572,6 +581,7 @@ print "F-score on testing data: {:.4f}".format(fbeta_score(y_test, reduced_predi
 # *If training time was a factor, would you consider using the reduced data as your training set?*
 
 # **Answer:**
+# Using only five features, the model performs worse, especially as measured by the F-score. It obtains a F-score that is 0.0564 below the final model that uses all the features. This a disappointing result. However, if training time was a factor, for example if training time dropped from several days to a few hours when using less features, I would consider using the reduced data as a training set. However, given that it took less than 10 seconds to train the unoptimized model on the full training set, I would not reccomend using the reduced feature set in this case. 
 
 # > **Note**: Once you have completed all of the code implementations and successfully answered each question above, you may finalize your work by exporting the iPython Notebook as an HTML document. You can do this by using the menu above and navigating to  
 # **File -> Download as -> HTML (.html)**. Include the finished document along with this notebook as your submission.
