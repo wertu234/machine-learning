@@ -159,7 +159,7 @@ display(features_raw.head(n = 1))
 features = pd.get_dummies(features_raw)
 
 # TODO: Encode the 'income_raw' data to numerical values
-income = (income_raw == ">50K")
+income = (income_raw == ">50K").astype(int)
 
 # Print the number of features after one-hot encoding
 encoded = list(features.columns)
@@ -252,23 +252,23 @@ print("Naive Predictor: [Accuracy score: {:.4f}, F-score: {:.4f}]".format(accura
 # The biggest drawback of logistic regression stems from its simplcicity. It cannot deal automatically with non-linear relationships between the class and the explanatory variables. While it is possible to manually add non-linear features, this process can be time consuming. 
 # 
 # _Why is it a good candiate?_:
-# Logistic regression is a good candidate for this problem, but not because of preexisting information that I have regarding the data set. Since there are only 13 (103 after one hot encoding) features, logistic regression is not needed to prevent over fitting. In fact, with so few predictor variables it is expected that logistic regression will underperform compared to other models that can learn more complicated, non-linear, relatiionships. In addition, with less than 50 000 records, the data set is quite small. So logistic regression is not needed for performance reasons. However, I think that logistic regression is an appropiate model for this problem because it is good to inlcude it as a baseline. If other, more complicated models, do not outperform it by a significant margin, a logistic regression model should be used since it's improved interpretability could represent a large business value to the charity.
+# Logistic regression is a good candidate for this problem, but not because of preexisting information that I have regarding the data set. Since there are only 13 (103 after one hot encoding) features, logistic regression is not needed to prevent over fitting. In fact, with so few predictor variables, it is expected that logistic regression will underperform compared to other models that can learn more complicated, non-linear, relationships. In addition, with less than 50 000 records, the data set is quite small. So logistic regression is not needed for performance reasons. However, I think that logistic regression is an appropiate model for this problem because it is good to include it as a baseline. If other, more complicated models, do not outperform it by a significant margin, a logistic regression model should be used since it's improved interpretability could represent a large business value to the charity.
 # 
 # 
 # __Nearest neighbours__
 # 
 # _Real word application_:
-# When browsing or otherwise accessing a piece of content on the internet, the nearest neighbours algorithm can be used to serve up an ad that is similar to the content that is being accessed. Facebook would like to use such a method to serve ads related to a video that a user is watching. The ability to engage in so behavior is very important, important enough that Facebook has developed a more efficient implementation of the algorithm. 
+# When browsing or otherwise accessing a piece of content on the internet, the nearest neighbours algorithm can be used to serve up an ad that is similar to the content that is being accessed. Facebook would like to use such a method to serve ads related to a video that a user is watching. The ability to engage in such behaviour is potentially very profitable, important enough that Facebook has developed a more efficient implementation of the algorithm. 
 # 
 # https://techcrunch.com/2017/03/29/similarity-search/
 # 
 # _Strengths of the model_:
-# An important strength of the nearest neighbour algorithm is that it is fully non-parametric. Given enough training points, it can learn any relationship. Another strenght is that one inspect the nearest neighours for each training point. While not as easy to interpret as logistic regression, this can help explain and justify the results of the model to others.
+# An important strength of the nearest neighbour algorithm is that it is fully non-parametric. Given enough training points, it can learn any relationship. Another strength is that one inspect the nearest neighours for each training point. While not as easy to interpret as logistic regression, this can help explain and justify the results of the model to others.
 # 
 # _Weakness of model_:
-# The biggest weakness of the nearest neighbours algorithm is that it does not work well when the data set has many features. This is known as the curse of dimensionality. It means that as the number of features increases, the required number of training examples increases exponentially. As as a result, there are many data sets to which the k nearest neighbours algorithm cannot be applied  without reducing the number of dimensions. 
+# The biggest weakness of the nearest neighbours algorithm is that it does not work well when the data set has many features. This is known as the curse of dimensionality. It means that as the number of features increases, the required number of training examples increases exponentially. As a result, there are many data sets to which the k nearest neighbours algorithm cannot be applied without reducing the number of dimensions. 
 # 
-# In addition to not scaling well with the number of feature dimensions, the k nearest neighbours algorithm can also be slow when making predictions. This is because the k nearest neighbours algorithm does not do any "pretraining". It does not learn relationships between features and labels that are used at prediction time. At prediction time, the k-nearest algorithm looks anew at all the training points in order to produce a prediction for a testing sample.  
+# In addition to not scaling well with the number of feature dimensions, the k nearest neighbours algorithm can also be slow when making predictions. This is because the k nearest neighbours algorithm does not do any "pretraining". It does not learn a relationship between features and labels that is used at prediction time. At prediction time, the k-nearest algorithm looks anew at all the training points in order to produce a prediction for a testing sample.  
 # 
 # _Why is it a good candiate?_:
 # K nearest neighbours is a good candidate for this problem since the with less than 50 000 records, the algorithm will not be too slow when making predictions. In addition, the number of features is not too high relative to the number of training examples, so we should not be encountering the curse of dimensionality. Finally, given that I have selected to test logistic regression, a strongly parametric model, it will interesting to compare and contrast its results with k nearest neighbours, a non-parametric model.
@@ -346,13 +346,13 @@ def train_predict(learner, sample_size, X_train, y_train, X_test, y_test):
     results['acc_train'] = accuracy_score(y_train.iloc[:300], predictions_train[:300])
         
     # TODO: Compute accuracy on test set
-    results['acc_test'] = accuracy_score(y_test.iloc[:300], predictions_test[:300])
+    results['acc_test'] = accuracy_score(y_test, predictions_test)
     
     # TODO: Compute F-score on the the first 300 training samples
     results['f_train'] = fbeta_score(y_train.iloc[:300], predictions_train[:300], beta = 0.5)
         
     # TODO: Compute F-score on the test set
-    results['f_test'] = fbeta_score(y_test.iloc[:300], predictions_test[:300], beta = 0.5)
+    results['f_test'] = fbeta_score(y_test, predictions_test, beta = 0.5)
        
     # Success
     print("{} trained on {} samples.".format(learner.__class__.__name__, sample_size))
@@ -388,9 +388,9 @@ clf_C = GradientBoostingClassifier(random_state = 123)
 
 
 # TODO: Calculate the number of samples for 1%, 10%, and 100% of the training data
-samples_1 = int(0.01 * n_records)
-samples_10 = int(0.1 * n_records)
-samples_100 = n_records
+samples_1 = int(0.01 * y_train.shape[0])
+samples_10 = int(0.1 * y_train.shape[0])
+samples_100 = y_train.shape[0]
 
 # Collect results on the learners
 results = {}
@@ -422,7 +422,7 @@ vs.evaluate(results, accuracy, fscore)
 # *In one to two paragraphs, explain to *CharityML*, in layman's terms, how the final model chosen is supposed to work. Be sure that you are describing the major qualities of the model, such as how the model is trained and how the model makes a prediction. Avoid using advanced mathematical or technical jargon, such as describing equations or discussing the algorithm implementation.*
 
 # **Answer: ** 
-# The gradient boosted trees classifier is an ensemble method. An ensemble method combines several algorithms together to receive better predictive power. Boosting means that the ensemble is created by combining weak learners. In this case, the weak learners are decision trees. Decision trees are an efficient method of modelling non-linear relationships. However decision trees are prone to overfitting to the training data and performing poorly on the test data as a result. Boosting avoids this problem by creating a series of decision trees, all of which are constrained to be "weak". This means that they do not overfit the data. This is typically accomplished by constraining the depth of each tree. However this means that each individual tree is not a very good estimator. This is why the gradient boosted alogorithm builds trees sequentially, where later trees try to improve the results of earlier trees. In fact, in the boosted trees classifier, later trees are not trying to predict the labels themselves, but rather the error or "pseudo-residuals" of the model created by the earlier trees. Prediction is accomplished by outputting the results of all of these weak decision trees and then summing together their outputs. This produces a probability of whether a particular record belongs to the target class.
+# The gradient boosted trees classifier builds a series of decision trees. A decision tree splits the training examples into groups by looking at single feature at a time. It tries to make certain that the samples in these groups have the same label. Because the gradient boosted trees classifier builds a series of decision trees, each individual decision tree does not have to be very accurate. Instead, each tree tries to improve upon the trees that came before.  Prediction is accomplished by outputting the results of all of these weak decision trees and then summing together their outputs. This produces a probability of whether a particular record belongs to the target class.
 
 # ### Implementation: Model Tuning
 # Fine tune the chosen model. Use grid search (`GridSearchCV`) with at least one important parameter tuned with at least 3 different values. You will need to use the entire training set for this. In the code cell below, you will need to implement the following:
