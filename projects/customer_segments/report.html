@@ -12204,7 +12204,7 @@ The first customer, corresponding to index 0, is probably a smaller grocery stor
 
 <span class="c1"># TODO: Split the data into training and testing sets using the given feature as the target</span>
 <span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="k">import</span> <span class="n">train_test_split</span>
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">Fresh</span><span class="p">,</span> <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">125</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">new_data</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">Fresh</span><span class="p">,</span> <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">125</span><span class="p">)</span>
 
 <span class="c1"># TODO: Create a decision tree regressor and fit it to the training set</span>
 <span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="k">import</span> <span class="n">DecisionTreeRegressor</span>
@@ -12228,7 +12228,7 @@ The first customer, corresponding to index 0, is probably a smaller grocery stor
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>0.958766981276
+<pre>-1.20714561306
 </pre>
 </div>
 </div>
@@ -12264,7 +12264,7 @@ The first customer, corresponding to index 0, is probably a smaller grocery stor
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong>
-I attempted to predict the "fresh" variable. The reported prediction score was 0.959. This means that the other five variables explain 95.9% of the variability of the "fresh" feature. Based on this information, it seems that this variable is not necessary to identify customer's spending habits, as it is mostly determined by the other five variables.</p>
+I attempted to predict the "fresh" variable. The reported prediction score was -1.20714561306. This means that the predicted value produced by the decision tree regressor using the other five features is of no use in explaining the variability the fresh feature. Therefore the fresh feature is absolutely necessary for understanding the spending habits of customers.</p>
 
 </div>
 </div>
@@ -14108,7 +14108,7 @@ DMMwDMMwjCny/wF2eAYjCf/r7QAAAABJRU5ErkJggg==
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>It seems that spending on grocery and detergents/paper are strongly correlated. In additon there appears to be a strong correlation between spending on grocery goods and milk. From the scatter matrix of correlations, I cannot visually detect any strong correlatons between the 'fresh' feature and any other single feature. This neither confirms or denies the findings from using the decision tree to determine the relevance of the fresh feature. It appears that the 'fresh' feature is not strongly correlated with any other single variable, but instead has a strong relationship with the whole, joint, set of other features.</p>
+<p>It seems that spending on grocery and detergents/paper are strongly correlated. In additon there appears to be a strong correlation between spending on grocery goods and milk. From the scatter matrix of correlations, I cannot visually detect any strong correlatons between the 'fresh' feature and any other single feature. This confirms my findings from using the decision tree to determine the relevance of the fresh feature. It appears that the 'fresh' feature is not strongly correlated with any other single variable; if it had been, the decision tree regressor would have made better predictions.</p>
 <p>It seems like data come from a truncated normal distribution. Of course, the amount sold to a customer can't not be less than 0 (except in exception cases due to returns or rebates), and thus cannot be naegative. So the amounts are clustered close to 0, with a long right tail.</p>
 
 </div>
@@ -19789,7 +19789,7 @@ CyZJkiRJ6rBgkiRJkqSO/wUmsGpjgOjg6AAAAABJRU5ErkJggg==
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x23b71468240&gt;</pre>
+<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x1b09d7ebcf8&gt;</pre>
 </div>
 
 </div>
