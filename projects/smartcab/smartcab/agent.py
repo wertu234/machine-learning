@@ -46,7 +46,7 @@ class LearningAgent(Agent):
         """ The build_state function is called when the agent requests data from the 
             environment. The next waypoint, the intersection inputs, and the deadline 
             are all features available to the agent. """
-
+        
         # Collect data about the environment
         waypoint = self.planner.next_waypoint() # The next waypoint 
         inputs = self.env.sense(self)           # Visual input - intersection light and traffic
@@ -60,7 +60,7 @@ class LearningAgent(Agent):
 
         return state
 
-
+    
     def get_maxQ(self, state):
         """ The get_max_Q function is called when the agent is asked to find the
             maximum Q-value of all actions based on the 'state' the smartcab is in. """
@@ -96,7 +96,7 @@ class LearningAgent(Agent):
         self.state = state
         self.next_waypoint = self.planner.next_waypoint()
         action = None
-
+        
         ########### 
         ## TO DO ##
         ###########
@@ -104,6 +104,13 @@ class LearningAgent(Agent):
         # When learning, choose a random action with 'epsilon' probability
         #   Otherwise, choose an action with the highest Q-value for the current state
  
+        if self.learning == False:
+            action = random.sample(self.valid_actions,1)[0]
+        elif random.random() <= epsilon:
+            action = sample(self.valid_actions,1)[0]
+        else:
+             action = None
+				
         return action
 
 
@@ -120,7 +127,7 @@ class LearningAgent(Agent):
 
         return
 
-
+    
     def update(self):
         """ The update function is called when a time step is completed in the 
             environment for a given trial. This function will build the agent
@@ -145,6 +152,7 @@ def run():
     #   verbose     - set to True to display additional output from the simulation
     #   num_dummies - discrete number of dummy agents in the environment, default is 100
     #   grid_size   - discrete number of intersections (columns, rows), default is (8, 6)
+
     env = Environment()
     
     ##############
@@ -159,7 +167,7 @@ def run():
     # Follow the driving agent
     # Flags:
     #   enforce_deadline - set to True to enforce a deadline metric
-    env.set_primary_agent(agent)
+    env.set_primary_agent(agent, enforce_deadline = True)
 
     ##############
     # Create the simulation
@@ -168,14 +176,14 @@ def run():
     #   display      - set to False to disable the GUI if PyGame is enabled
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
-    sim = Simulator(env)
+    sim = Simulator(env, update_delay = 0.05, log_metrics = True)
     
     ##############
     # Run the simulator
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run()
+    sim.run(n_test = 10)
 
 
 if __name__ == '__main__':
