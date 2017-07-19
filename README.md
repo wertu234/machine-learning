@@ -6,8 +6,8 @@ My completed (and in progress) projects for Udacity's Machine Learning curriculu
 1. Titanic Survival Exploration: Completed
 2. Predicting Boston Housing Prices: Completed
 3. Finding Donors For Charity: Completed
-4. Creating Customer Segments: Submitted Updated - Awaiting Feedback
-5. Train a Smartcab to Drive: Pending
+4. Creating Customer Segments: Completed
+5. Train a Smartcab to Drive: Submitted - Awaiting Feedback
 6. Build a Digit Recognition Program: Pending
 7. Capstone Proposal: Pending
 8. Capstone Project: Pending
