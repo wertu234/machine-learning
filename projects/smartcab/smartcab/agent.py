@@ -42,7 +42,7 @@ class LearningAgent(Agent):
         self.epsilon = math.exp(-0.01 * self.trial)
         #self.epsilon =  0.05
 
-        self.alpha = max(math.exp(-0.05 * self.trial),0.1)
+        self.alpha = max(math.exp(-0.01 * self.trial),0.1)
 
         if testing is True:
             self.epsilon = 0.0
